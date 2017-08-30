@@ -3,13 +3,16 @@
 function bindButtons() {
   document.getElementById('get-breeds').addEventListener('click', showBreeds)
   document.getElementById('get-random-dog').addEventListener('click', showRandomPicture)
+  document.getElementById('get-my-pets').addEventListener('click', getPets)
+  document.getElementById('save-pet').addEventListener('click', savePet)
 }
 
 function showBreeds () {
   showResult('Loading..')
 
   sendRequest({
-    url: 'https://dog.ceo/api/breeds/list/all'
+    url: 'https://dog.ceo/api/breeds/list/all',
+    method: 'GET'
   }, function (err, response) {
     if (err) {
       return showResult(err.message)
@@ -23,7 +26,8 @@ function showRandomPicture () {
   showResult('Loading..')
 
   sendRequest({
-    url: 'https://dog.ceo/api/breeds/image/random'
+    url: 'https://dog.ceo/api/breeds/image/random',
+    method: 'GET'
   }, function (err, response) {
     if (err) {
       return showResult(err.message)
@@ -43,8 +47,54 @@ function showRandomPicture () {
   })
 }
 
+function getPets () {
+  showResult('Loading..')
+
+  sendRequest({
+    url: 'http://localhost:9000/pets',
+    method: 'GET'
+  }, function (err, response) {
+    if (err) {
+      return showResult(err.message)
+    }
+
+    showResult(JSON.stringify(response))
+  })
+}
+
+function savePet () {
+  var savePetForm = document.getElementById('save-pet-form')
+  var nameEl = savePetForm.querySelector('[name=name]')
+  var breedEl = savePetForm.querySelector('[name=breed]')
+  var ageEl = savePetForm.querySelector('[name=age]')
+
+  showResult('Loading..')
+
+  sendRequest({
+    url: 'http://localhost:9000/pets',
+    method: 'POST',
+    data: {
+      name: nameEl.value,
+      breed: breedEl.value,
+      age: ageEl.value
+    }
+  }, function (err, response) {
+    nameEl.value = ''
+    breedEl.value = ''
+    ageEl.value = ''
+
+    if (err) {
+      return showResult(err.message)
+    }
+
+    showResult(JSON.stringify(response))
+  })
+}
+
 function sendRequest (options, cb) {
   var url = options.url
+  var method = options.method
+  var data = options.data
   var xhr = new XMLHttpRequest()
 
   xhr.onreadystatechange = function () {
@@ -55,8 +105,14 @@ function sendRequest (options, cb) {
     }
   }
 
-  xhr.open('GET', url, true)
-  xhr.send()
+  xhr.open(method, url, true)
+
+  if (method !== 'GET') {
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.send(JSON.stringify(data))
+  } else {
+    xhr.send()
+  }
 }
 
 function showResult (content) {

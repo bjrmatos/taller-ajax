@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Taller Ajax - jQuery</title>
+</head>
+<body>
+  <div>
+    <div style="display: inline-block;">
+      <button id="get-breeds">Get breeds</button>
+      <button id="get-random-dog">Get random dog</button>
+      <button id="get-my-pets">Get my pets</button>
+    </div>
+    <div
+      id="user-area"
+      style="display: inline-block; margin-left: 30px;"
+    >
+    </div>
+  </div>
+  <br/>
+  <form id="save-pet-form">
+    <label>
+      Nombre
+      <input name="name" type="text" />
+    </label>
+    <label>
+      Raza
+      <input name="breed" type="text" />
+    </label>
+    <label>
+      Edad
+      <input name="age" type="text" />
+    </label>
+    <button id="save-pet" type="button">Grabar</button>
+  </form>
+  <div id="result"></div>
+  <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
